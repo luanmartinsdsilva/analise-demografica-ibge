@@ -1,0 +1,15 @@
+RELATÓRIO DEMOGRÁFICO – IBGE (PNAD Contínua)
+
+População total analisada: 425859 mil pessoas
+
+Faixa etária mais numerosa: Total
+Faixa etária menos numerosa: 14 a 17 anos
+
+Distribuição por grupo de idade:
+- Total: 212930 mil pessoas
+- 0 a 13 anos: 38518 mil pessoas
+- 14 a 17 anos: 11788 mil pessoas
+- 18 a 24 anos: 21332 mil pessoas
+- 25 a 39 anos: 48729 mil pessoas
+- 40 a 59 anos: 57141 mil pessoas
+- 60 anos ou mais: 35421 mil pessoas

@@ -1,0 +1,27 @@
+﻿"Tabela 5918 - População, por grupo de idade"
+"Variável - População (Mil pessoas)"
+"";"Trimestre x Grupo de idade"
+"";"3º trimestre 2025"
+"";"Total";"0 a 13 anos";"14 a 17 anos";"18 a 24 anos";"25 a 39 anos";"40 a 59 anos";"60 anos ou mais"
+"Brasil";"212930";"38518";"11788";"21332";"48729";"57141";"35421"
+"Fonte: IBGE - Pesquisa Nacional por Amostra de Domicílios Contínua trimestral"
+
+"Notas"
+"A partir de 15 de agosto de 2025, as estimativas deste tema passaram a ser divulgadas com base na nova ponderação da pesquisa, conforme a Nota Técnica 02/2025. Consequentemente, a série histórica dos indicadores foi atualizada."
+""
+"Legenda"
+"Símbolo";"Significado"
+"-";"Zero absoluto, não resultante de um cálculo ou arredondamento.
+Ex: Em determinado município não existem pessoas de 14 anos de idade sem instrução."
+"0";"Zero resultante de um cálculo ou arredondamento.
+Ex: A inflação do feijão em determinada Região Metropolitana foi 0.
+Determinado município produziu 400 kg de sementes de girassol e os dados da tabela são expressos em toneladas."
+"X";"Valor inibido para não identificar o informante.
+Ex: Determinado município só possui uma empresa produtora de cimento, logo o valor de sua produção deve ser inibido."
+"..";"Valor não se aplica.
+Ex: Não se pode obter o total da produção agrícola em determinado município quando os produtos agrícolas são contabilizados com unidades de medida distintas."
+"...";"Valor não disponível.
+Ex: A produção de feijão em determinado município não foi pesquisada ou determinado município não existia no ano da pesquisa."
+"A a Z
+(exceto X)";"Significa uma faixa de valores. Varia em função da tabela (se for o caso).
+Ex: O nível de precisão da produção estimada de combustíveis está na faixa A (95 a 100%)"

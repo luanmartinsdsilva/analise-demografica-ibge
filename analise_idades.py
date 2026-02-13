@@ -1,3 +1,6 @@
+import json
+import csv
+
 def extenso_para_numero(texto):
     unidades = {
         "zero": 0, "um": 1, "dois": 2, "três": 3, "quatro": 4,
@@ -65,13 +68,35 @@ print("Menores de 18 anos:", menores18)
 print("Maiores ou iguais a 18 anos:", maiores18)
 
 # Salvar resultado em arquivo
-with open("resultado_idades.txt", "w", encoding="utf-8") as out:
-    out.write("Idades válidas: " + str(idades_convertidas) + "\n")
-    out.write("Quantidade: " + str(quantidade) + "\n")
-    out.write("Média: " + str(media) + "\n")
-    out.write("Maior idade: " + str(maior) + "\n")
-    out.write("Menor idade: " + str(menor) + "\n")
-    out.write("Menores de 18 anos: " + str(menores18) + "\n")
-    out.write("Maiores ou iguais a 18 anos: " + str(maiores18) + "\n")
+# =========================
+# ORGANIZAR RESULTADOS
+# =========================
+resultado = {
+    "idades_validas": idades_convertidas,
+    "quantidade": quantidade,
+    "media": media,
+    "maior_idade": maior,
+    "menor_idade": menor,
+    "menores_de_18": menores18,
+    "maiores_ou_iguais_18": maiores18
+}
 
-print("\n✅ Resultados salvos em 'resultado_idades.txt'")
+# =========================
+# SALVAR EM JSON
+# =========================
+with open("resultado_idades.json", "w", encoding="utf-8") as f:
+    json.dump(resultado, f, indent=4, ensure_ascii=False)
+
+print("✅ Resultado salvo em 'resultado_idades.json'")
+
+
+# =========================
+# SALVAR EM CSV
+# =========================
+with open("resultado_idades.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerow(["Campo", "Valor"])
+    for chave, valor in resultado.items():
+        writer.writerow([chave, valor])
+
+print("✅ Resultado salvo em 'resultado_idades.csv'")

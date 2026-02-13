@@ -1,0 +1,24 @@
+{
+    "idades_validas": [
+        20,
+        15,
+        32,
+        15,
+        40,
+        21
+    ],
+    "quantidade": 6,
+    "media": 23.833333333333332,
+    "maior_idade": 40,
+    "menor_idade": 15,
+    "menores_de_18": [
+        15,
+        15
+    ],
+    "maiores_ou_iguais_18": [
+        20,
+        32,
+        40,
+        21
+    ]
+}

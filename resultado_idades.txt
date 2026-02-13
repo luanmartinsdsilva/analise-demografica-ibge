@@ -1,7 +1,0 @@
-Idades válidas: [20, 15, 32, 15, 40, 21]
-Quantidade: 6
-Média: 23.833333333333332
-Maior idade: 40
-Menor idade: 15
-Menores de 18 anos: [15, 15]
-Maiores ou iguais a 18 anos: [20, 32, 40, 21]

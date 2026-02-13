@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from database import get_connection
 
@@ -36,12 +36,26 @@ def listar_pessoas():
     conn.close()
 
     return [dict(pessoa) for pessoa in pessoas]
+@app.get("/pessoas/{pessoa_id}")
+def buscar_pessoa(pessoa_id: int):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM pessoas WHERE id = ?", (pessoa_id,))
+    pessoa = cursor.fetchone()
+
+    conn.close()
+
+    if not pessoa:
+        raise HTTPException(status_code=404, detail="Pessoa não encontrada")
+
+    return dict(pessoa)
 
 
 # =========================
 # POST - CRIAR PESSOA
 # =========================
-@app.post("/pessoas")
+@app.post("/pessoas", status_code=201)
 def criar_pessoa(pessoa: Pessoa):
     conn = get_connection()
     cursor = conn.cursor()
@@ -52,7 +66,17 @@ def criar_pessoa(pessoa: Pessoa):
     """, (pessoa.nome, pessoa.idade, pessoa.cidade))
 
     conn.commit()
+
+    novo_id = cursor.lastrowid
+
     conn.close()
+
+    return {
+        "id": novo_id,
+        "nome": pessoa.nome,
+        "idade": pessoa.idade,
+        "cidade": pessoa.cidade
+    }
 
     return {"mensagem": "Pessoa criada com sucesso"}
 
@@ -64,6 +88,13 @@ def criar_pessoa(pessoa: Pessoa):
 def atualizar_pessoa(pessoa_id: int, pessoa: Pessoa):
     conn = get_connection()
     cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM pessoas WHERE id = ?", (pessoa_id,))
+    existente = cursor.fetchone()
+
+    if not existente:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Pessoa não encontrada")
 
     cursor.execute("""
         UPDATE pessoas
@@ -85,11 +116,14 @@ def deletar_pessoa(pessoa_id: int):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        DELETE FROM pessoas
-        WHERE id = ?
-    """, (pessoa_id,))
+    cursor.execute("SELECT * FROM pessoas WHERE id = ?", (pessoa_id,))
+    pessoa = cursor.fetchone()
 
+    if not pessoa:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Pessoa não encontrada")
+
+    cursor.execute("DELETE FROM pessoas WHERE id = ?", (pessoa_id,))
     conn.commit()
     conn.close()
 

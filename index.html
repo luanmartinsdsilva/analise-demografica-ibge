@@ -16,8 +16,10 @@
 <ul id="lista"></ul>
 
 <script>
+const API_URL = "https://analise-demografica-ibge.onrender.com";
+
 async function listarPessoas() {
-    const response = await fetch("http://127.0.0.1:8000/pessoas");
+    const response = await fetch(`${API_URL}/pessoas`);
     const pessoas = await response.json();
 
     const lista = document.getElementById("lista");
@@ -25,7 +27,7 @@ async function listarPessoas() {
 
     pessoas.forEach(p => {
         const li = document.createElement("li");
-        li.textContent = `${p.nome} - ${p.idade} anos - ${p.cidade}`;
+        li.textContent = `${p.id} - ${p.nome} - ${p.idade} anos - ${p.cidade}`;
         lista.appendChild(li);
     });
 }
@@ -35,7 +37,7 @@ async function criarPessoa() {
     const idade = parseInt(document.getElementById("idade").value);
     const cidade = document.getElementById("cidade").value;
 
-    await fetch("http://127.0.0.1:8000/pessoas", {
+    await fetch(`${API_URL}/pessoas`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

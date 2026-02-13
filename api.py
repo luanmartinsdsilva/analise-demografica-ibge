@@ -1,8 +1,16 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from database import get_connection
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="API de Pessoas", version="1.0.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # permite qualquer origem (modo simples)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # =========================

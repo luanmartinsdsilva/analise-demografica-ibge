@@ -1,21 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cadastro de Pessoas</title>
+    <meta charset="UTF-8">
+    <title>Sistema de Pessoas</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            padding: 30px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 750px;
+            margin: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 6px 10px;
+            margin-left: 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .mensagem {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>Cadastro de Pessoa</h2>
+<div class="container">
 
-<input type="text" id="nome" placeholder="Nome">
-<input type="number" id="idade" placeholder="Idade">
-<input type="text" id="cidade" placeholder="Cidade">
-<button onclick="criarPessoa()">Cadastrar</button>
+    <h2>Cadastro de Pessoa</h2>
 
-<h2>Lista de Pessoas</h2>
-<ul id="lista"></ul>
+    <input type="hidden" id="pessoaId">
+
+    <input type="text" id="nome" placeholder="Nome">
+    <input type="number" id="idade" placeholder="Idade">
+    <input type="text" id="cidade" placeholder="Cidade">
+
+    <button class="btn-primary" id="btnSalvar" onclick="salvarPessoa()">
+        Cadastrar
+    </button>
+
+    <div class="mensagem" id="mensagem"></div>
+
+    <hr>
+
+    <h2>Lista de Pessoas</h2>
+    <ul id="lista"></ul>
+
+</div>
 
 <script>
+
 const API_URL = "https://analise-demografica-ibge.onrender.com";
 
 async function listarPessoas() {
@@ -27,37 +100,97 @@ async function listarPessoas() {
 
     pessoas.forEach(p => {
         const li = document.createElement("li");
-        li.textContent = `${p.id} - ${p.nome} - ${p.idade} anos - ${p.cidade}`;
+
+        li.innerHTML = `
+            <strong>${p.nome}</strong> - ${p.idade} anos - ${p.cidade}
+            <button class="btn-warning" onclick="editarPessoa(${p.id}, '${p.nome}', ${p.idade}, '${p.cidade}')">
+                Editar
+            </button>
+            <button class="btn-danger" onclick="deletarPessoa(${p.id})">
+                Deletar
+            </button>
+        `;
+
         lista.appendChild(li);
     });
 }
 
-async function criarPessoa() {
+function editarPessoa(id, nome, idade, cidade) {
+
+    document.getElementById("pessoaId").value = id;
+    document.getElementById("nome").value = nome;
+    document.getElementById("idade").value = idade;
+    document.getElementById("cidade").value = cidade;
+
+    document.getElementById("btnSalvar").innerText = "Atualizar";
+}
+
+async function salvarPessoa() {
+
+    const id = document.getElementById("pessoaId").value;
     const nome = document.getElementById("nome").value;
     const idade = parseInt(document.getElementById("idade").value);
     const cidade = document.getElementById("cidade").value;
+    const mensagem = document.getElementById("mensagem");
 
-    const response = await fetch(`${API_URL}/pessoas`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            nome: nome,
-            idade: idade,
-            cidade: cidade
-        })
+    if (!nome || !idade || !cidade) {
+        mensagem.innerText = "Preencha todos os campos!";
+        mensagem.style.color = "red";
+        return;
+    }
+
+    let response;
+
+    if (id) {
+        // UPDATE
+        response = await fetch(`${API_URL}/pessoas/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nome, idade, cidade })
+        });
+    } else {
+        // CREATE
+        response = await fetch(`${API_URL}/pessoas`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nome, idade, cidade })
+        });
+    }
+
+    if (response.ok) {
+        mensagem.innerText = id ? "Pessoa atualizada!" : "Pessoa cadastrada!";
+        mensagem.style.color = "green";
+
+        limparFormulario();
+        listarPessoas();
+    } else {
+        mensagem.innerText = "Erro ao salvar.";
+        mensagem.style.color = "red";
+    }
+}
+
+async function deletarPessoa(id) {
+
+    if (!confirm("Tem certeza que deseja deletar?")) return;
+
+    await fetch(`${API_URL}/pessoas/${id}`, {
+        method: "DELETE"
     });
-
-    const data = await response.json();
-    console.log("Resposta do servidor:", data);
 
     listarPessoas();
 }
 
-listarPessoas();
-</script>
+function limparFormulario() {
+    document.getElementById("pessoaId").value = "";
+    document.getElementById("nome").value = "";
+    document.getElementById("idade").value = "";
+    document.getElementById("cidade").value = "";
+    document.getElementById("btnSalvar").innerText = "Cadastrar";
+}
 
+listarPessoas();
+
+</script>
 
 </body>
 </html>

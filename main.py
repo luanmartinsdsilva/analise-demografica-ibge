@@ -1,23 +1,15 @@
-from pathlib import Path
-from scripts.ibge_utils import carregar_dados_ibge
-import matplotlib.pyplot as plt
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from routes.pessoas import router as pessoas_router
 
-def gerar_grafico_barras(faixas, populacoes):
-    plt.figure()
-    plt.bar(faixas, populacoes)
-    plt.title("População do Brasil por Grupo de Idade (IBGE)")
-    plt.xlabel("Grupo de idade")
-    plt.ylabel("População (mil pessoas)")
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.show()
+app = FastAPI(title="API de Pessoas", version="2.0.0")
 
-def main():
-    base_dir = Path(__file__).resolve().parent
-    csv_path = base_dir / "data" / "ibge_idades.csv"
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    faixas, populacoes = carregar_dados_ibge(csv_path)
-    gerar_grafico_barras(faixas, populacoes)
-
-if __name__ == "__main__":
-    main()
+app.include_router(pessoas_router)

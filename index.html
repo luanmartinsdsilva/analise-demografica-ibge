@@ -37,7 +37,7 @@ async function criarPessoa() {
     const idade = parseInt(document.getElementById("idade").value);
     const cidade = document.getElementById("cidade").value;
 
-    await fetch(`${API_URL}/pessoas`, {
+    const response = await fetch(`${API_URL}/pessoas`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -49,11 +49,15 @@ async function criarPessoa() {
         })
     });
 
+    const data = await response.json();
+    console.log("Resposta do servidor:", data);
+
     listarPessoas();
 }
 
 listarPessoas();
 </script>
+
 
 </body>
 </html>

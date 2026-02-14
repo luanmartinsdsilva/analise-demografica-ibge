@@ -1,17 +1,20 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from database import get_connection
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="API de Pessoas", version="1.0.0")
+
+# =========================
+# CONFIGURAÇÃO DE CORS
+# =========================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # permite qualquer origem (modo simples)
+    allow_origins=["*"],  # Em produção ideal seria domínio específico
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # =========================
 # MODELO DE DADOS
@@ -21,7 +24,6 @@ class Pessoa(BaseModel):
     idade: int
     cidade: str
 
-
 # =========================
 # ROTA RAIZ
 # =========================
@@ -29,9 +31,8 @@ class Pessoa(BaseModel):
 def raiz():
     return {"mensagem": "API rodando com sucesso 🚀"}
 
-
 # =========================
-# GET - LISTAR PESSOAS
+# GET - LISTAR TODAS
 # =========================
 @app.get("/pessoas")
 def listar_pessoas():
@@ -44,6 +45,11 @@ def listar_pessoas():
     conn.close()
 
     return [dict(pessoa) for pessoa in pessoas]
+
+
+# =========================
+# GET - BUSCAR POR ID
+# =========================
 @app.get("/pessoas/{pessoa_id}")
 def buscar_pessoa(pessoa_id: int):
     conn = get_connection()
@@ -74,9 +80,7 @@ def criar_pessoa(pessoa: Pessoa):
     """, (pessoa.nome, pessoa.idade, pessoa.cidade))
 
     conn.commit()
-
     novo_id = cursor.lastrowid
-
     conn.close()
 
     return {
@@ -85,8 +89,6 @@ def criar_pessoa(pessoa: Pessoa):
         "idade": pessoa.idade,
         "cidade": pessoa.cidade
     }
-
-    return {"mensagem": "Pessoa criada com sucesso"}
 
 
 # =========================
